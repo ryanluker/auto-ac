@@ -6,7 +6,7 @@ var request     = require('request');
 var Gpio        = require('onoff').Gpio;
 
 //connected devices
-var powerTail   = new Gpio(13, 'out');
+var powerTail   = new Gpio(408, 'out');
 
 //misc variables
 var INCREMENT   = 900; //15min
@@ -21,6 +21,7 @@ program
   .description('turns device on via gpio pin')
   .action(function() {
     powerTail.writeSync(1);
+    console.log('PowerTail State: ' + powerTail.readSync());
   });
 
 program
@@ -28,13 +29,14 @@ program
   .description('turns device off via gpio pin')
   .action(function() {
     powerTail.writeSync(0);
+    console.log('PowerTail State: ' + powerTail.readSync());
   });
 
 program
   .command('status')
   .description('return the status of the device')
   .action(function() {
-    console.log('State: ' + powerTail.readSync());
+    console.log('PowerTail State: ' + powerTail.readSync());
   });
 
 program
