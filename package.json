@@ -1,0 +1,27 @@
+{
+  "name": "auto-ac",
+  "version": "1.0.0",
+  "description": "control an electronic device via gpio and weather api",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanluker/auto-ac.git"
+  },
+  "keywords": [
+    "automation",
+    "CHIP",
+    "GPIO",
+    "weather"
+  ],
+  "author": "ryanluker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ryanluker/auto-ac/issues"
+  },
+  "homepage": "https://github.com/ryanluker/auto-ac#readme",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "onoff": "^1.1.1",
+    "request": "^2.72.0"
+  }
+}
