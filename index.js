@@ -10,8 +10,8 @@ var powerTail   = new Gpio(408, 'out');
 
 //misc variables
 var INCREMENT   = 900000; //15min
-var TEMPERATURE = 24; //24C
-var WEATHERAPI  = 'http://api.openweathermap.org/data/2.5/weather?q=Kelowna,ca&appid=794fc23dd8ce7ba66cd0361f58355010&units=metric';
+var TEMPERATURE = 99; //24C
+var WEATHERAPI  = 'http://api.openweathermap.org/data/2.5/weather?q=Resolute,ca&appid=794fc23dd8ce7ba66cd0361f58355010&units=metric';
 
 program
   .version('1.0.0')
