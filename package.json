@@ -20,8 +20,8 @@
   },
   "homepage": "https://github.com/ryanluker/auto-ac#readme",
   "dependencies": {
-    "commander": "^2.9.0",
-    "onoff": "^1.1.1",
-    "request": "^2.72.0"
+    "commander": "2.9.0",
+    "onoff": "1.1.1",
+    "request": "2.72.0"
   }
 }
