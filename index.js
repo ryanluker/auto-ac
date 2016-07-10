@@ -6,7 +6,7 @@ var request     = require('request');
 var Gpio        = require('onoff').Gpio;
 
 //connected devices
-var powerTail   = new Gpio(408, 'out');
+var powerTail   = new Gpio(408, 'out', null, {activeLow: true});
 
 //misc variables
 var INCREMENT   = 900000; //15min
@@ -67,10 +67,10 @@ function auto(inc, temp) {
       console.log(new Date() + ': Current Temp (' + JSON.parse(body).main.temp + ')');
       if(temp < JSON.parse(body).main.temp) {
         console.log(new Date() + ': Switching on');
-        powerTail.writeSync(0);
+        powerTail.writeSync(1);
       } else {
         console.log(new Date() + ': Switching off');
-        powerTail.writeSync(1);
+        powerTail.writeSync(0);
       } 
     }
 
@@ -83,8 +83,10 @@ function auto(inc, temp) {
 
 program.parse(process.argv);
 
-//remove resources
+//remove and shutdown resources
 process.on('SIGINT', function () {
+  console.log(new Date() + ': Switching off');
+  powerTail.writeSync(0);
   console.log(new Date() + ': Shutting down!');
   powerTail.unexport();
   process.exit(0);
