@@ -3,10 +3,14 @@
 //npm modules
 var program     = require('commander');
 var request     = require('request');
-var Gpio        = require('onoff').Gpio;
 
 //connected devices
-var powerTail   = new Gpio(408, 'out', null, {activeLow: true});
+try {
+  var Gpio        = require('onoff').Gpio;
+  var powerTail   = new Gpio(408, 'out', null, {activeLow: true});
+} catch (error) {
+  console.log(error);
+}
 
 //misc variables
 var INCREMENT   = 900000; //15min
@@ -43,19 +47,18 @@ program
   .command('auto')
   .option("-i, --inc [seconds]", "Sets auto to check api every x seconds")
   .option("-t, --temp [temperature]", "Sets auto to run if temp (C) is reached")
-  .description('starts the auto with default timer if none provided')
+  .description('starts the auto with default timer and temperature if none provided')
   .action(function(options) {
-    STATE = 'AUTO';
-    INCREMENT = options.inc || INCREMENT;
-    TEMPERATURE = options.temp || TEMPERATURE;
-    console.log('State: ' + STATE + ' INC: ' + INCREMENT + ' Temp: ' + TEMPERATURE);
-    auto(INCREMENT, TEMPERATURE);
+    var increment = options.inc || INCREMENT;
+    var temperature = options.temp || TEMPERATURE;
+    console.log('State: { INC: ' + increment + ' Temp: ' + temperature + ' }');
+    auto(increment, temperature);
   });
 
 /**
  * auto function that begins an infinite loop around whether to turn on or off
  * @param {integer} inc - wait time in seconds between loops
- * @param {integer} temp - temperature in C for the activation point 
+ * @param {integer} temp - temperature in C for the activation point
  */
 function auto(inc, temp) {
   request(WEATHERAPI, function(err, res, body) {
@@ -63,15 +66,7 @@ function auto(inc, temp) {
     if(err) {
       console.log(new Date() + ': Error');
     } else {
-      //decide whether to turn on or off
-      console.log(new Date() + ': Current Temp (' + JSON.parse(body).main.temp + ')');
-      if(temp < JSON.parse(body).main.temp) {
-        console.log(new Date() + ': Switching on');
-        powerTail.writeSync(1);
-      } else {
-        console.log(new Date() + ': Switching off');
-        powerTail.writeSync(0);
-      } 
+      checkState(powerTail, temp, JSON.parse(body).main.temp);
     }
 
     //set timeout for next check in
@@ -80,6 +75,23 @@ function auto(inc, temp) {
     }, inc);
   });
 };
+
+/**
+ * checkState takes the temp and target, then makes decisions on state
+ * @param {Gpio} device - applicable Gpio device
+ * @param {integer} target - target temperature
+ * @param {integer} temp - temperature returned from the api
+ */
+function checkState(device, target, temp) {
+  console.log(new Date() + ': Current Temp (' + temp + ')');
+  if(target < temp) {
+    console.log(new Date() + ': Switching on');
+    device.writeSync(1);
+  } else {
+    console.log(new Date() + ': Switching off');
+    device.writeSync(0);
+  }
+}
 
 program.parse(process.argv);
 
@@ -91,3 +103,6 @@ process.on('SIGINT', function () {
   powerTail.unexport();
   process.exit(0);
 });
+
+//exports
+module.exports.checkState = checkState;
