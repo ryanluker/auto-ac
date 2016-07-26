@@ -15,7 +15,7 @@ try {
 //misc variables
 var INCREMENT   = 900000; //15min
 var TEMPERATURE = 24; //24C
-var WEATHERAPI  = 'http://api.openweathermap.org/data/2.5/weather?q=Kelowna,ca&appid=794fc23dd8ce7ba66cd0361f58355010&units=metric';
+var WEATHERAPI  = 'http://api.openweathermap.org/data/2.5/weather?q=Kamloops,ca&appid=794fc23dd8ce7ba66cd0361f58355010&units=metric';
 
 program
   .version('1.0.0')
