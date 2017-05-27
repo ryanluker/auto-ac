@@ -13,6 +13,7 @@ try {
 }
 
 //misc variables
+var SLACK_API = '';
 var INCREMENT   = 900000; //15min
 var TEMPERATURE = 24; //24C
 var WEATHERAPI  = 'http://api.openweathermap.org/data/2.5/weather?q=Kelowna,ca&appid=794fc23dd8ce7ba66cd0361f58355010&units=metric';
@@ -52,6 +53,7 @@ program
     var increment = options.inc || INCREMENT;
     var temperature = options.temp || TEMPERATURE;
     console.log('State: { INC: ' + increment + ' Temp: ' + temperature + ' }');
+    sendNotification(`State: { INC: ${increment} Temp: ${temperature} }`);
     auto(increment, temperature);
   });
 
@@ -65,6 +67,7 @@ function auto(inc, temp) {
     //continue auto operation even if http request fails
     if(err) {
       console.log(new Date() + ': Error');
+      sendNotification(`${new Date()}: Error: ${JSON.stringify(err)}`);
     } else {
       checkState(powerTail, temp, JSON.parse(body).main.temp);
     }
@@ -77,6 +80,20 @@ function auto(inc, temp) {
 };
 
 /**
+ * sends a slack message to a predefined end point
+ * @param {string} message - message to send to slack
+ */
+function sendNotification(message) {
+  if(!SLACK_API) return ;
+
+  const data = {
+    text: `@ryanluker ${message}`
+  }
+
+  request.post(SLACK_API, {body: JSON.stringify(data)});
+}
+
+/**
  * checkState takes the temp and target, then makes decisions on state
  * @param {Gpio} device - applicable Gpio device
  * @param {integer} target - target temperature
@@ -86,9 +103,11 @@ function checkState(device, target, temp) {
   console.log(new Date() + ': Current Temp (' + temp + ')');
   if(target < temp) {
     console.log(new Date() + ': Switching on');
+    sendNotification(`${new Date()}: Switching on`);
     device.writeSync(1);
   } else {
     console.log(new Date() + ': Switching off');
+    sendNotification(`${new Date()}: Switching off`);
     device.writeSync(0);
   }
 }
@@ -100,6 +119,7 @@ process.on('SIGINT', function () {
   console.log(new Date() + ': Switching off');
   powerTail.writeSync(0);
   console.log(new Date() + ': Shutting down!');
+  sendNotification(`${new Date()}: Shutting down!`);
   powerTail.unexport();
   process.exit(0);
 });
