@@ -87,7 +87,8 @@ function sendNotification(message) {
   if(!SLACK_API) return ;
 
   const data = {
-    text: `@ryanluker ${message}`
+    text: `@ryanluker ${message}`,
+    link_names: 1
   }
 
   request.post(SLACK_API, {body: JSON.stringify(data)});
