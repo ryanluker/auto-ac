@@ -84,6 +84,8 @@ function auto(inc, temp) {
  * @param {string} message - message to send to slack
  */
 function sendNotification(message) {
+  if(!SLACK_API) return ;
+
   const data = {
     text: `@ryanluker ${message}`
   }
