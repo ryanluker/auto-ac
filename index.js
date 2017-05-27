@@ -88,7 +88,7 @@ function sendNotification(message) {
   if(!SLACK_API) return ;
   if(lastUniqueMessage === message) return ;
 
-  const lastUniqueMessage = message;
+  lastUniqueMessage = message;
   const data = {
     text: `@ryanluker ${message}`,
     link_names: 1
