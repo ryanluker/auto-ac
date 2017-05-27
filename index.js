@@ -13,6 +13,7 @@ try {
 }
 
 //misc variables
+var lastUniqueMessage = '';
 var SLACK_API = '';
 var INCREMENT   = 900000; //15min
 var TEMPERATURE = 24; //24C
@@ -85,7 +86,9 @@ function auto(inc, temp) {
  */
 function sendNotification(message) {
   if(!SLACK_API) return ;
+  if(lastUniqueMessage === message) return ;
 
+  const lastUniqueMessage = message;
   const data = {
     text: `@ryanluker ${message}`,
     link_names: 1
@@ -104,11 +107,11 @@ function checkState(device, target, temp) {
   console.log(new Date() + ': Current Temp (' + temp + ')');
   if(target < temp) {
     console.log(new Date() + ': Switching on');
-    sendNotification(`${new Date()}: Switching on`);
+    sendNotification(`Switching on`);
     device.writeSync(1);
   } else {
     console.log(new Date() + ': Switching off');
-    sendNotification(`${new Date()}: Switching off`);
+    sendNotification(`Switching off`);
     device.writeSync(0);
   }
 }
@@ -127,3 +130,4 @@ process.on('SIGINT', function () {
 
 //exports
 module.exports.checkState = checkState;
+module.exports.sendNotification = sendNotification;
