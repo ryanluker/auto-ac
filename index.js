@@ -17,7 +17,7 @@ var lastUniqueMessage = '';
 var SLACK_API = '';
 var INCREMENT   = 900000; //15min
 var TEMPERATURE = 24; //24C
-var WEATHERAPI  = 'http://api.openweathermap.org/data/2.5/weather?q=Kelowna,ca&appid=794fc23dd8ce7ba66cd0361f58355010&units=metric';
+var WEATHERAPI  = 'https://api.wunderground.com/api/cb7e117cdc8aa81d/conditions/q/CA/Kelowna.json';
 
 program
   .version('1.0.0')
@@ -70,7 +70,11 @@ function auto(inc, temp) {
       console.log(new Date() + ': Error');
       sendNotification(`${new Date()}: Error: ${JSON.stringify(err)}`);
     } else {
-      checkState(powerTail, temp, JSON.parse(body).main.temp);
+      checkState(
+        powerTail,
+        temp,
+        JSON.parse(body).current_observation.temp_c
+      );
     }
 
     //set timeout for next check in
