@@ -17,7 +17,7 @@ var lastUniqueMessage = '';
 var SLACK_API = '';
 var INCREMENT   = 900000; //15min
 var TEMPERATURE = 24; //24C
-var WEATHERAPI  = 'https://api.wunderground.com/api/cb7e117cdc8aa81d/conditions/q/CA/Kelowna.json';
+var WEATHERAPI  = 'https://api.wunderground.com/api/cb7e117cdc8aa81d/conditions/q/CA/Kelowna/CYLW.json';
 
 program
   .version('1.0.0')
