@@ -1,0 +1,10 @@
+[package]
+name = "auto-ac"
+version = "0.1.0"
+authors = ["ryanluker <ryanluker@outlook.com>"]
+
+[dependencies]
+sysfs_gpio = "0.5"
+reqwest = "0.8"
+serde = "1.0"
+serde_derive = "1.0"
