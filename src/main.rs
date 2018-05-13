@@ -113,7 +113,6 @@ fn auto_run(pt: Pin, temp: i32, intvl: u64, slack_api: &str, weather_api: &str) 
 fn main() {
     // operation variables
     let powertail = Pin::new(408); // chip xio - p0
-    let temperature = 26; // celsius
     let interval = 900000; // 15min in ms
 
     // environment variables
@@ -125,6 +124,11 @@ fn main() {
     let weather_api = match env::var("WEATHER_API") {
         Ok(val) => val,
         Err(_) => panic!("WEATHER_API environment variable not found!"),
+    };
+
+    let temperature: i32 = match env::var("AUTO_TEMP") {
+        Ok(val) => val.parse().unwrap(),
+        Err(_) => 26, // celsius
     };
 
     // export powertail pin and start auto ac
